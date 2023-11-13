@@ -1,0 +1,62 @@
+
+// This is an example code structure for the FX Easy Signal trading robot in MQL5
+
+// Include necessary libraries and define global variables
+
+#include <Trade\Trade.mqh>
+#include <Technical\Indicators\MovingAverages.mqh>
+
+// Define input parameters
+
+input double LotSize = 0.1; // Trading lot size
+input int StopLoss = 50; // Stop-loss level in pips
+input int TakeProfit = 100; // Take-profit level in pips
+
+// Define the main function
+
+void OnTick()
+{
+    // Get current market prices
+        double currentBid = SymbolInfoDouble(_Symbol, SYMBOL_BID);
+            double currentAsk = SymbolInfoDouble(_Symbol, SYMBOL_ASK);
+
+                // Calculate moving averages
+                    double maShort = iMA(_Symbol, 0, 10, 0, MODE_SMA, PRICE_CLOSE, 0);
+                        double maLong = iMA(_Symbol, 0, 20, 0, MODE_SMA, PRICE_CLOSE, 0);
+
+                            // Check for trading conditions
+                                if (maShort > maLong)
+                                    {
+                                            // Open a buy position
+                                                    ExecuteTrade(OP_BUY, currentAsk, StopLoss, TakeProfit);
+                                                        }
+                                                            else if (maShort < maLong)
+                                                                {
+                                                                        // Open a sell position
+                                                                                ExecuteTrade(OP_SELL, currentBid, StopLoss, TakeProfit);
+                                                                                    }
+                                                                                    }
+
+                                                                                    // Helper function to execute trades
+
+                                                                                    void ExecuteTrade(int tradeType, double price, int stopLoss, int takeProfit)
+                                                                                    {
+                                                                                        // Create a trade request
+                                                                                            CTrade trade;
+
+                                                                                                // Set trade parameters
+                                                                                                    trade.SetSymbol(_Symbol);
+                                                                                                        trade.SetType(tradeType);
+                                                                                                            trade.SetVolume(LotSize);
+                                                                                                                trade.SetPrice(price);
+                                                                                                                    trade.SetStopLoss(stopLoss);
+                                                                                                                        trade.SetTakeProfit(takeProfit);
+                                                                                                                        
+                                                                                                                            // Execute the trade
+                                                                                                                                trade.Buy();
+                                                                                                                                    trade.Sell();
+                                                                                                                                    }
+                                                                                                                                    
+                                                                                                                                    // Additional functions and logic can be added as per the requirements of the project
+                                                                                                                                    
+                                                                                                                                    
